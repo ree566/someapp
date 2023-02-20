@@ -17,6 +17,7 @@
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked === 1"
+              @change="changeCheckStateById(cart, $event)"
             />
           </li>
           <li class="cart-list-con2">
@@ -45,7 +46,9 @@
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="#none" class="sindelet" @click="deleteCartById(cart)"
+              >删除</a
+            >
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -54,11 +57,16 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllCheck" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="cartInfoList.length > 0 && isAllCheck"
+          @change="changeAllCartCheckState($event)"
+        />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -77,6 +85,7 @@
 </template>
 
 <script>
+import throttle from "lodash/throttle";
 import { mapGetters } from "vuex";
 export default {
   name: "ShopCart",
@@ -87,7 +96,7 @@ export default {
     getData() {
       this.$store.dispatch("getCartList");
     },
-    async changeSkuNum(action, cart, disNum) {
+    changeSkuNum: throttle(async function (action, cart, disNum) {
       if (isNaN(disNum)) {
         disNum = 0;
       }
@@ -115,6 +124,43 @@ export default {
         });
         this.getData();
       } catch (error) {}
+    }, 1000),
+    async deleteCartById(cart) {
+      try {
+        await this.$store.dispatch("deleteCartBySkuId", cart.skuId);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    async changeCheckStateById(cart, event) {
+      let isChecked = event.target.checked ? "1" : "0";
+      try {
+        await this.$store.dispatch("changeCheckStateById", {
+          skuId: cart.skuId,
+          isChecked,
+        });
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    async deleteAllCheckedCart() {
+      try {
+        await this.$store.dispatch("deleteAllCheckedCart");
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    async changeAllCartCheckState(event) {
+      let isChecked = event.target.checked ? "1" : "0";
+      try {
+        await this.$store.dispatch("changeAllCartCheckState", isChecked);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
     },
   },
   computed: {

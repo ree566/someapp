@@ -22,13 +22,19 @@ export const reqGetFloorList = () => mockReq({ url: "/floor", method: "GET" });
 //   "trademark": "4:小米"
 // }
 export const reqGetSearchResult = (params) =>
-  mockReq({ url: "/list", method: "POST", data: params });
+  req({ url: "/list", method: "POST", data: params });
 
-export const reqGoodsInfo = (skuid) => mockReq({ url: `/item`, method: "GET" });
-// export const reqGoodsInfo = (skuid) =>
-//   req({ url: `/item/${skuid}`, method: "GET" });
+// export const reqGoodsInfo = (skuid) => mockReq({ url: `/item`, method: "GET" });
+export const reqGoodsInfo = (skuid) =>
+  req({ url: `/item/${skuid}`, method: "GET" });
 
 export const reqAddOrUpdateShoppingCart = (skuId, skuNum) =>
   req({ url: `cart/addToCart/${skuId}/${skuNum}`, method: "POST" });
 
 export const reqCartList = () => req({ url: "/cart/cartList", method: "GET" });
+
+export const reqDeleteCartById = (skuId) =>
+  req({ url: `/cart/deleteCart/${skuId}`, method: "DELETE" });
+
+export const reqChangeCheckStateById = (skuId, isChecked) =>
+  req({ url: `/cart/checkCart/${skuId}/${isChecked}`, method: "GET" });
