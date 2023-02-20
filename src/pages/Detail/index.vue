@@ -385,11 +385,20 @@ export default {
         this.skuNum = parseInt(input);
       }
     },
-    addShoppingCart() {
-      this.$store.dispatch("addOrUpdateShoppingCart", {
-        skuId: this.$route.params.skuid,
-        skuNum: this.skuNum,
-      });
+    async addShoppingCart() {
+      try {
+        await this.$store.dispatch("addOrUpdateShoppingCart", {
+          skuId: this.$route.params.skuid,
+          skuNum: this.skuNum,
+        });
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        this.$router.push({
+          name: "addcartsuccess",
+          query: { skuNum: this.skuNum },
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
     },
   },
   computed: {
