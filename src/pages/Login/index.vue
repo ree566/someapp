@@ -81,8 +81,8 @@ export default {
   name: "Login",
   data() {
     return {
-      phone: "18944444444",
-      password: "123",
+      phone: "13700000000",
+      password: "111111",
     };
   },
   methods: {
@@ -93,7 +93,8 @@ export default {
           password &&
           (await this.$store.dispatch("userLogin", { phone, password }));
 
-        this.$router.push("/home");
+        const toPath = this.$route.query.redirect || home;
+        this.$router.push(toPath);
       } catch (error) {
         alert(error.message);
       }

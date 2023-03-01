@@ -56,3 +56,34 @@ export const reqUserInfo = () =>
 
 export const reqUserLogout = () =>
   req({ url: `/user/passport/logout`, method: "GET" });
+
+export const reqUserAddressInfo = () =>
+  req({ url: `/user/userAddress/auth/findUserAddressList`, method: "GET" });
+
+export const reqOrderInfo = () =>
+  req({
+    url: `/order/auth/trade`,
+    method: "GET",
+  });
+
+export const reqSubmitOrder = (tradeNo, data) =>
+  req({
+    url: `/order/auth/submitOrder?tradeNo=${tradeNo}`,
+    data,
+    method: "POST",
+  });
+
+export const reqPayInfo = (orderId) =>
+  req({
+    url: `/payment/weixin/createNative/${orderId}`,
+    method: "GET",
+  });
+
+export const reqPayStatus = (orderId) =>
+  req({ url: `/payment/weixin/queryPayStatus/${orderId}`, method: "GET" });
+
+export const reqMyOrderList = (page, limit) =>
+  req({
+    url: `/order/auth/${page}/${limit}`,
+    method: "GET",
+  });
